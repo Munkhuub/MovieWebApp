@@ -2,7 +2,7 @@ import { LogoIcon } from "./assets/LogoIcon";
 import { MailIcon } from "./assets/MailIcon";
 import { PhoneIcon } from "./assets/PhoneIcon";
 
-export const Footer = () => {
+export const Footer: React.FunctionComponent = () => {
   return (
     <div className="w-full bg-[#4338CA] h-70 px-20 py-10  text-white flex justify-between">
       <div className="flex flex-col gap-3">
@@ -13,7 +13,7 @@ export const Footer = () => {
         <p>© 2024 Movie Z. All Rights Reserved.</p>
       </div>
       <div className="flex gap-24">
-        <div>
+        <div className="flex flex-col gap-6">
           <p>Contact Information</p>
           <div className="h-10  w-[174px] flex items-center gap-3">
             <div>

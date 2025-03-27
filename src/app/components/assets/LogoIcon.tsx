@@ -1,4 +1,6 @@
-export const LogoIcon = ({ color }) => {
+type LogoIconProps = { color: string };
+
+export const LogoIcon = ({ color }: LogoIconProps) => {
   return (
     <svg
       width="18"

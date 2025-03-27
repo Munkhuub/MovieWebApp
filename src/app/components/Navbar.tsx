@@ -5,7 +5,7 @@ import { SearchIcon } from "./assets/SearchIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Navbar = () => {
+export const Navbar: React.FunctionComponent = () => {
   return (
     <div className="h-15 w-full py-3 ps-20 flex justify-between">
       <div className="flex gap-2 my-2 text-[16px] font-bold italic text-[#4338CA]">
@@ -13,14 +13,11 @@ export const Navbar = () => {
         <p>Movie Z</p>
       </div>
       <div className="flex gap-3 ">
-        {/* <button className="h-9  py-2 px-4 rounded-md flex justify-center border border-[#E4E4E7] items-center shadow-sm">
-        </button> */}
         <Button variant="outline">
           <ArrowDown />
           <p>Genre</p>
         </Button>
         <div className=" flex w-[397px] relative pl-[38px] border rounded-md border-[#E4E4E7] items-center shadow-sm">
-          {/* <input type="text" className="" placeholder="Search..." /> */}
           <Input
             placeholder="Search.."
             className="border-none outline-none focus-visible:ring-transparent shadow-none"
@@ -30,8 +27,6 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {/* <button className="p-[10px] border rounded-md border-[#E4E4E7] shadow-sm"></button> */}
       <Button variant="outline">
         <MoonIcon />
       </Button>
