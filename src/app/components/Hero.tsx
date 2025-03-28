@@ -4,6 +4,7 @@ import { PlayIcon } from "./assets/PlayIcon";
 import { StarIcon } from "./assets/StarIcon";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { StarIconBig } from "./assets/StarIconBig";
 
 interface MovieSlide {
   path: string;
@@ -28,20 +29,22 @@ export const Hero = () => {
         "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends at Shiz University in the Land of Oz. After an encounter with the Wonderful Wizard of Oz, their friendship reaches a crossroads.",
     },
     {
-      path: "/images/hero/movie2.png",
+      path: "/images/hero/movie3.png",
       alt: "Movie slide 2",
-      movieStatus: "",
-      movieName: "",
-      movieRating: "",
-      description: "",
+      movieStatus: "Now Playing:",
+      movieName: "Gladiator II",
+      movieRating: "6.9/10",
+      description:
+        "After his home is conquered by the tyrannical emperors who now lead Rome, Lucius is forced to enter the Colosseum and must look to his past to find strength to return the glory of Rome to its people.",
     },
     {
-      path: "/images/hero/movie3.png",
+      path: "/images/hero/movie2.png",
       alt: "Movie slide 3",
-      movieStatus: "",
-      movieName: "",
-      movieRating: "",
-      description: "",
+      movieStatus: "Now Playing:",
+      movieName: "Moana 2",
+      movieRating: "6.9/10",
+      description:
+        "After receiving an unexpected call from her wayfinding ancestors, Moana must journey to the far seas of Oceania and into dangerous, long-lost waters for an adventure unlike anything she's ever faced.",
     },
   ];
 
@@ -80,7 +83,7 @@ export const Hero = () => {
   };
 
   return (
-    <div className="relative overflow-hidden mt-6">
+    <div className="relative overflow-hidden lg:mt-6">
       <motion.div
         className="flex"
         animate={{ x: `-${currentIndex * 100}%` }}
@@ -88,19 +91,26 @@ export const Hero = () => {
       >
         {images.map((image, index) => {
           return (
-            <div key={index} className="h-150 w-full object-cover min-w-full">
-              <img src={image.path} alt={`Movie slide ${index + 1}`} />
-              <div className="w-[302px] absolute top-[178px] left-[140px] text-white">
+            <div
+              key={index}
+              className="h-150 w-full object-cover min-w-full relative"
+            >
+              <img
+                src={image.path}
+                alt={`Movie slide ${index + 1}`}
+                className="aspect-3/2 object-cover "
+              />
+              <div className="text-black lg:w-[300px] absolute lg:top-[178px] lg:left-[140px] lg:text-white flex flex-col gap-4">
                 <div>
-                  <p>Now Playing:</p>
-                  <h1>Wicked</h1>
-                  <div className="flex gap-1">
-                    <StarIcon />
-                    <p>6.9/10</p>
+                  <p>{image.movieStatus}</p>
+                  <h1 className="text-4xl font-bold">{image.movieName}</h1>
+                  <div className="flex gap-1 items-center">
+                    <StarIconBig />
+                    <p className="text-[18px]">{image.movieRating}</p>
                   </div>
                 </div>
-                <p></p>
-                <Button variant="outline">
+                <p className="text-xs">{image.description}</p>
+                <Button variant="default" className="bg-white text-black">
                   <PlayIcon />
                   <p>Watch Trailer</p>
                 </Button>

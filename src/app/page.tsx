@@ -9,13 +9,13 @@ import { Footer } from "./components/Footer";
 
 export default function Home() {
   return (
-    <div className="w-[1440px] m-auto">
+    <div className="lg:w-[1440px] m-auto">
       <Navbar />
       <Hero />
-      <UpComing />
+      {/* <UpComing />
       <Popular />
       <TopRated />
-      <Footer />
+      <Footer />  */}
     </div>
   );
 }
