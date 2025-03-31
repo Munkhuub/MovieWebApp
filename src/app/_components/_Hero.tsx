@@ -1,10 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import { PlayIcon } from "./assets/PlayIcon";
-import { StarIcon } from "./assets/StarIcon";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { StarIconBig } from "./assets/StarIconBig";
+import { PlayIconWhite } from "./assets/PlayIconWhite";
+import axios from "axios";
 
 interface MovieSlide {
   path: string;
@@ -93,14 +94,14 @@ export const Hero = () => {
           return (
             <div
               key={index}
-              className="h-150 w-full object-cover min-w-full relative"
+              className="h-[425px] lg:h-150 w-full object-cover min-w-full relative"
             >
               <img
                 src={image.path}
                 alt={`Movie slide ${index + 1}`}
                 className="aspect-3/2 object-cover "
               />
-              <div className="text-black lg:w-[300px] absolute lg:top-[178px] lg:left-[140px] lg:text-white flex flex-col gap-4">
+              <div className="text-black lg:w-[300px] absolute top-[250px] lg:top-[178px] left-5 lg:left-[140px] lg:text-white flex flex-col gap-4">
                 <div>
                   <p>{image.movieStatus}</p>
                   <h1 className="text-4xl font-bold">{image.movieName}</h1>
@@ -110,8 +111,16 @@ export const Hero = () => {
                   </div>
                 </div>
                 <p className="text-xs">{image.description}</p>
-                <Button variant="default" className="bg-white text-black">
-                  <PlayIcon />
+                <Button
+                  variant="default"
+                  className="lg:bg-white lg:text-black w-[145px] h-10"
+                >
+                  <div className="hidden lg:block">
+                    <PlayIcon />
+                  </div>
+                  <div className="block lg:hidden">
+                    <PlayIconWhite />
+                  </div>
                   <p>Watch Trailer</p>
                 </Button>
               </div>
@@ -121,22 +130,22 @@ export const Hero = () => {
       </motion.div>
 
       <button
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 size-10 bg-white bg-opacity-50 p-2 rounded-[50%] text-black"
+        className=" hidden lg:block absolute left-4 top-1/2 transform -translate-y-1/2 size-10 bg-white bg-opacity-50 p-2 rounded-[50%] text-black"
         onClick={handlePrev}
       >
         ←
       </button>
       <button
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 size-10 bg-white bg-opacity-50 p-2 rounded-[50%] text-black"
+        className=" hidden lg:block absolute right-4 top-1/2 transform -translate-y-1/2 size-10 bg-white bg-opacity-50 p-2 rounded-[50%] text-black"
         onClick={handleNext}
       >
         →
       </button>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-[380px] lg:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {images.map((_, index) => (
           <button
             key={index}
-            className={`w-3 h-3 rounded-full ${
+            className={`w-1 lg:w-3 h-1 lg:h-3 rounded-full ${
               currentIndex === index ? "bg-white" : "bg-gray-400"
             }`}
             onClick={() => setCurrentIndex(index)}

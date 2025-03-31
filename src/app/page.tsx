@@ -1,21 +1,21 @@
 "use client";
 import Image from "next/image";
-import { Navbar } from "./components/Navbar";
-import { Hero } from "./components/Hero";
-import { UpComing } from "./components/UpComing";
-import { Popular } from "./components/Popular";
-import { TopRated } from "./components/TopRated";
-import { Footer } from "./components/Footer";
+import { Navbar } from "./_components/_Navbar";
+import { Hero } from "./_components/_Hero";
+import { UpComing } from "./_components/_UpComing";
+import { Popular } from "./_components/_Popular";
+import { TopRated } from "./_components/_TopRated";
+import { Footer } from "./_components/_Footer";
 
 export default function Home() {
   return (
     <div className="lg:w-[1440px] m-auto">
       <Navbar />
       <Hero />
-      {/* <UpComing />
+      <UpComing />
       <Popular />
       <TopRated />
-      <Footer />  */}
+      <Footer />
     </div>
   );
 }
