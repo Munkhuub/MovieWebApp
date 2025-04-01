@@ -4,6 +4,7 @@ import { StarIcon } from "./assets/StarIcon";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { data } from "framer-motion/client";
+import { useRouter } from "next/navigation";
 
 export const ACCESS_TOKEN =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNjEyNzc4YjMyOWVkMDI4MTc0NTM0MzYxODhkYTZhYSIsIm5iZiI6MTc0MzQwNzAzMy4xNTgwMDAyLCJzdWIiOiI2N2VhNDdiOTUwNDBhNzViNGFlNTY0NDUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.u36iE-gAX36Zt59VdM1ZC2n5g1rCzvXIUqKbDWHzJnM";
@@ -19,13 +20,15 @@ export type Movie = {
   vote_average: number;
 };
 
-type Response = {
+export type Response = {
   results: Movie[];
+  total_pages: number;
+  total_result: number;
 };
 
 export const UpComing = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     const getMoviesByAxios = async () => {
       const { data } = await axios.get<Response>(
@@ -47,7 +50,10 @@ export const UpComing = () => {
     <div className="px-5 py-8 lg:px-20 lg:py-13 flex flex-col gap-8 lg:gap-[36px]">
       <div className="flex justify-between w-full h-[36px]">
         <p className="text-2xl font-semibold">Upcoming</p>
-        <button className="flex items-center gap-2">
+        <button
+          className="flex items-center gap-2"
+          onClick={() => router.push("/popular")}
+        >
           <p>See more</p>
           <ArrowRight />
         </button>

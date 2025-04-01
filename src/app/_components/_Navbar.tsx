@@ -4,6 +4,7 @@ import { MoonIcon } from "./assets/MoonIcon";
 import { SearchIcon } from "./assets/SearchIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 
 export const Navbar: React.FunctionComponent = () => {
   return (
@@ -17,7 +18,8 @@ export const Navbar: React.FunctionComponent = () => {
           <ArrowDown />
           <p>Genre</p>
         </Button>
-        <div className="flex gap-2 px-4 border rounded-md border-[#E4E4E7] items-center shadow-sm">
+        <DropdownMenu> </DropdownMenu>
+        <div className="w-95 flex gap-2 px-4 border rounded-md border-[#E4E4E7] items-center shadow-sm">
           <div className="">
             <SearchIcon />
           </div>
