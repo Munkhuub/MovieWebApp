@@ -1,12 +1,12 @@
 "use client";
 import Image from "next/image";
-import { Navbar } from "../_components/_Navbar";
+import { Navbar } from "../_components/Navbar";
 import { ArrowRight } from "../_components/assets/ArrowRight";
 import { StarIcon } from "../_components/assets/StarIcon";
-import { Footer } from "../_components/_Footer";
+import { Footer } from "../_components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ACCESS_TOKEN, Movie, Response } from "../_components/_UpComing";
+import { ACCESS_TOKEN, Movie, Response } from "../_components/UpComing";
 import {
   Pagination,
   PaginationContent,
@@ -23,7 +23,6 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handlePage = (page: number) => {
     setPage(page);

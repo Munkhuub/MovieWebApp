@@ -2,9 +2,9 @@
 import { ArrowRight } from "./assets/ArrowRight";
 import { StarIcon } from "./assets/StarIcon";
 import { useState, useEffect } from "react";
-import { Movie } from "./_UpComing";
+import { Movie } from "./UpComing";
 import axios from "axios";
-import { ACCESS_TOKEN } from "./_UpComing";
+import { ACCESS_TOKEN } from "./UpComing";
 
 type Response = {
   results: Movie[];

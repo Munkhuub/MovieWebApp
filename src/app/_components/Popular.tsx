@@ -2,37 +2,21 @@
 import { ArrowRight } from "./assets/ArrowRight";
 import { StarIcon } from "./assets/StarIcon";
 import { useState, useEffect } from "react";
+import { Movie } from "./UpComing";
 import axios from "axios";
-import { data } from "framer-motion/client";
-import { useRouter } from "next/navigation";
+import { ACCESS_TOKEN } from "./UpComing";
 
-export const ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNjEyNzc4YjMyOWVkMDI4MTc0NTM0MzYxODhkYTZhYSIsIm5iZiI6MTc0MzQwNzAzMy4xNTgwMDAyLCJzdWIiOiI2N2VhNDdiOTUwNDBhNzViNGFlNTY0NDUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.u36iE-gAX36Zt59VdM1ZC2n5g1rCzvXIUqKbDWHzJnM";
-export type Movie = {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  popularity: number;
-  poster_path: string;
-  title: string;
-  overview: string;
-  vote_average: number;
-};
-
-export type Response = {
+type Response = {
   results: Movie[];
-  total_pages: number;
-  total_result: number;
 };
 
-export const UpComing = () => {
+export const Popular = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const router = useRouter();
+
   useEffect(() => {
     const getMoviesByAxios = async () => {
       const { data } = await axios.get<Response>(
-        "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
+        "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
         {
           headers: {
             Authorization: `Bearer ${ACCESS_TOKEN}`,
@@ -49,11 +33,8 @@ export const UpComing = () => {
   return (
     <div className="px-5 py-8 lg:px-20 lg:py-13 flex flex-col gap-8 lg:gap-[36px]">
       <div className="flex justify-between w-full h-[36px]">
-        <p className="text-2xl font-semibold">Upcoming</p>
-        <button
-          className="flex items-center gap-2"
-          onClick={() => router.push("/popular")}
-        >
+        <p className="text-2xl font-semibold">Popular</p>
+        <button className="flex items-center gap-2">
           <p>See more</p>
           <ArrowRight />
         </button>
