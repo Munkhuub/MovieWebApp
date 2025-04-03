@@ -71,12 +71,12 @@ export const UpComing = () => {
                   className="w-full h-[233px] lg:h-[340px] rounded-lg"
                   src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
                 />
-                <div className="mt-3 ml-2 flex flex-col gap-2">
+                <div className="mt-3 ml-2 flex flex-col gap-2  overflow-hidden">
                   <div className="flex gap-[8px] items-center">
                     <StarIcon />
                     <div>{item.vote_average.toString().slice(0, 3)}/10</div>
                   </div>
-                  <p className="text-[18px]">{item.title}</p>
+                  <p className="text-[18px]tracking-tight">{item.title}</p>
                 </div>
               </div>
             </Link>
