@@ -31,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     const getMoviesByAxios = async () => {
       const { data } = await axios.get<Response>(
-        `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`,
+        `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${ACCESS_TOKEN}`,
@@ -60,7 +60,7 @@ export default function Home() {
       <Navbar />
       <div className="px-5 py-8 lg:px-20 lg:py-13 flex flex-col gap-8 lg:gap-[36px]">
         <div className="flex justify-between w-full h-[36px]">
-          <p className="text-2xl font-semibold">Popular</p>
+          <p className="text-2xl font-semibold">Top Rated</p>
         </div>
         <div className="w-full grid grid-cols-2 lg:grid-cols-5 gap-5 lg:gap-8">
           {movies.map((item, index) => {

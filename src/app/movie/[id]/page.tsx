@@ -4,7 +4,7 @@ import { Navbar } from "@/app/_components/Navbar";
 import { ACCESS_TOKEN } from "@/app/_components/UpComing";
 import { StarIconBig } from "@/app/_components/assets/StarIconBig";
 import axios from "axios";
-import { data } from "framer-motion/client";
+import { data, i } from "framer-motion/client";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +29,10 @@ export type OneMovie = {
   runtime: number;
   vote_average: number;
   vote_count: number;
+  genres: Genres[];
+};
+type Genres = {
+  name: string;
 };
 type Cast = {
   name: string;
@@ -125,7 +129,7 @@ export default function Home() {
 
     getMovie();
   }, []);
-  console.log("hi", trailer);
+  console.log("hi", oneMovie);
 
   const formatRuntime = (minutes: number | undefined | null) => {
     if (!minutes) return "";
@@ -193,11 +197,13 @@ export default function Home() {
 
         <div className="flex flex-col gap-5">
           <div className="flex gap-3">
-            <Badge variant="outline">Pop Musical</Badge>
-            <Badge variant="outline">Pop Musical</Badge>
-            <Badge variant="outline">Pop Musical</Badge>
-            <Badge variant="outline">Pop Musical</Badge>
-            <Badge variant="outline">Pop Musical</Badge>
+            {oneMovie?.genres.map((item, i) => {
+              return (
+                <Badge variant="outline" key={i}>
+                  {item.name}
+                </Badge>
+              );
+            })}
           </div>
           <p>{oneMovie?.overview}</p>
           <div className="w-full flex gap-[53px] border-b-[1px] border-[#E4E4E7]">
