@@ -18,6 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
+import { PaginationComponent } from "../_components/Pagination";
 
 export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -86,7 +87,16 @@ export default function Home() {
             );
           })}
         </div>
-        <Pagination>
+        <PaginationComponent
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+          currentPage={currentPage}
+          lastPage={lastPage}
+          handlePage={handlePage}
+          page={page}
+        />
+
+        {/* <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious onClick={handlePrev} />
@@ -130,7 +140,7 @@ export default function Home() {
               <PaginationNext onClick={handleNext} />
             </PaginationItem>
           </PaginationContent>
-        </Pagination>
+        </Pagination> */}
       </div>
       <Footer />
     </div>

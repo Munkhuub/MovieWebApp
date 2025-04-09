@@ -9,7 +9,7 @@ import { Footer } from "./_components/Footer";
 
 export default function Home() {
   return (
-    <div className="lg:w-[1440px] m-auto">
+    <div className="lg:w-[1440px] m-auto relative">
       <Navbar />
       <Hero />
       <UpComing />

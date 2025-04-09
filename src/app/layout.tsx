@@ -25,7 +25,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <GenreProvider>
-          <div> {children}</div>
+          <div className="lg:w-[1440px] m-auto">{children} </div>
         </GenreProvider>
       </body>
     </html>

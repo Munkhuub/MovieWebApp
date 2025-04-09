@@ -42,7 +42,7 @@ export const GenreProvider = ({ children }: PropsWithChildren) => {
 
     getGenres();
   }, []);
-
+  console.log(genres);
   return (
     <GenreContext.Provider value={{ genres }}>{children}</GenreContext.Provider>
   );
