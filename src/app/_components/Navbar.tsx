@@ -57,12 +57,12 @@ export const Navbar = () => {
   return (
     <div className="w-full lg:px-20 px-5 py-5 relative">
       <div className="w-full flex justify-between">
-        <a href="/" className="logo">
+        <Link href="/" className="logo">
           <div className="flex gap-2 my-2 text-[16px] font-bold italic text-[#4338CA]">
             <LogoIcon color="#4338CA" />
             <p>Movie Z</p>
           </div>
-        </a>
+        </Link>
         <div className="lg:flex gap-3 hidden ">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 border-[1px] border-[#E4E4E7] shadow-sm px-[10px] py-2 rounded-md">
@@ -148,7 +148,7 @@ export const Navbar = () => {
               className="flex items-center gap-2 text-[14px] mt-[10px]"
               onClick={() => router.push(`/searchResult?searchValue=${input}`)}
             >
-              <p>See all results for "{input}"</p>
+              <p>See all results for {input}</p>
             </button>
           </div>
         )}

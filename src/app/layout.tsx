@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 import { GenreProvider } from "./_components/GenreProvider";
 
 const geistSans = Geist({
@@ -24,9 +24,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GenreProvider>
-          <div className="lg:w-[1440px] m-auto">{children} </div>
-        </GenreProvider>
+        <Suspense>
+          <GenreProvider>
+            <div className="lg:w-[1440px] m-auto">{children} </div>
+          </GenreProvider>
+        </Suspense>
       </body>
     </html>
   );
