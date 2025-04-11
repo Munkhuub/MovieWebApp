@@ -68,7 +68,7 @@ export const Navbar = () => {
             <DropdownMenuTrigger className="flex items-center gap-2 border-[1px] border-[#E4E4E7] shadow-sm px-[10px] py-2 rounded-md">
               <ArrowDown /> Genre
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[577px] p-4">
+            <DropdownMenuContent className="lg:w-[577px] p-4">
               <DropdownMenuLabel className="py-0">
                 <p className="text-2xl font-bold">Genres</p>
                 <p>See lists of movies by genre</p>
