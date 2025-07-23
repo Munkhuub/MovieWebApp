@@ -1,20 +1,18 @@
 "use client";
 import { Footer } from "@/app/_components/Footer";
-import { Navbar } from "@/app/_components/Navbar";
 import { ACCESS_TOKEN } from "@/app/_components/UpComing";
 import { StarIconBig } from "@/app/_components/assets/StarIconBig";
 import axios from "axios";
-import { data, i } from "framer-motion/client";
-import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "@/app/_components/assets/ArrowRight";
-import { ChevronRight } from "lucide-react";
-import { StarIcon } from "@/app/_components/assets/StarIcon";
-import { PlayIcon } from "@/app/_components/assets/PlayIcon";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MoreLikeThis } from "./_components/MoreLikeThis";
+import { Credits } from "./_components/Credits";
+import { Navbar } from "@/app/_components/Navbar";
+import { Star } from "lucide-react";
+import { Play } from "next/font/google";
+import { PlayIcon } from "@/app/_components/assets/PlayIcon";
 
 type Params = {
   id: string;
@@ -41,11 +39,11 @@ type Cast = {
 type Crew = {
   name: string;
 };
-type MovieTeam = {
+export type MovieTeam = {
   cast: Cast[];
   crew: Crew[];
 };
-type MovieSimilar = {
+export type MovieSimilar = {
   genre_ids: number[];
   id: number;
   poster_path: string;
@@ -55,84 +53,99 @@ type MovieSimilar = {
 type Trailer = {
   key: string;
 };
+
 export default function Home() {
   const { id } = useParams<Params>();
   const [oneMovie, setOneMovie] = useState<OneMovie | null>(null);
   const [movieTeam, setMovieTeam] = useState<MovieTeam | null>(null);
   const [movieSimilar, setMovieSimilar] = useState<MovieSimilar[] | null>(null);
   const [trailer, setTrailer] = useState<Trailer[]>([]);
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDark, setIsDark] = useState(false);
+
+  const handleToggleDark = () => setIsDark(!isDark);
 
   useEffect(() => {
     const getMovie = async () => {
-      const { data } = await axios.get(
-        `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        }
-      );
-
-      setOneMovie(data);
-      setLoading(false);
+      try {
+        const { data } = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        setOneMovie(data);
+      } catch (error) {
+        console.error("Error fetching movie:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getMovie();
   }, [id]);
 
   useEffect(() => {
-    const getMovie = async () => {
-      const { data } = await axios.get(
-        `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`,
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        }
-      );
-
-      setMovieTeam(data);
+    const getCredits = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        setMovieTeam(data);
+      } catch (error) {
+        console.error("Error fetching credits:", error);
+      }
     };
 
-    getMovie();
+    getCredits();
   }, [id]);
 
   useEffect(() => {
-    const getMovie = async () => {
-      const { data } = await axios.get(
-        `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        }
-      );
-
-      setMovieSimilar(data.results);
+    const getSimilar = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        setMovieSimilar(data.results);
+      } catch (error) {
+        console.error("Error fetching similar movies:", error);
+      }
     };
 
-    getMovie();
+    getSimilar();
   }, [id]);
 
   useEffect(() => {
-    const getMovie = async () => {
-      const { data } = await axios.get(
-        `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`,
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        }
-      );
-
-      setTrailer(data?.results);
+    const getTrailer = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        setTrailer(data?.results || []);
+      } catch (error) {
+        console.error("Error fetching trailer:", error);
+      }
     };
 
-    getMovie();
+    getTrailer();
   }, [id]);
-  console.log("hi", oneMovie);
 
   const formatRuntime = (minutes: number | undefined | null) => {
     if (!minutes) return "";
@@ -141,162 +154,152 @@ export default function Home() {
     return `${hours}h ${mins}m`;
   };
 
+  if (loading) {
+    return (
+      <div className="w-full bg-white min-h-screen">
+        <Navbar isDark={isDark} onToggleDark={handleToggleDark} />
+        <div className="px-4 lg:px-20">
+          <Skeleton className="h-8 w-48 mb-2" />
+          <Skeleton className="h-4 w-32 mb-4" />
+          <Skeleton className="h-48 w-full mb-6" />
+          <div className="flex gap-2 mb-4">
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <Skeleton className="h-20 w-full mb-4" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="lg:w-[1440px] m-auto">
-      <Navbar />
-      <div className="px-45">
-        {loading ? (
-          // Just the necessary skeleton loading components
-          <>
-            <div className="flex justify-between">
-              <div>
-                <Skeleton className="h-10 w-64 mb-2" />
-                <Skeleton className="h-6 w-40" />
+    <div
+      className={`w-full bg-white min-h-screen sm:max-w-full lg:max-w-[1440px] lg:mx-auto ${
+        isDark ? "dark" : ""
+      }`}
+    >
+      <Navbar isDark={isDark} onToggleDark={handleToggleDark} />
+
+      <div className="px-4 sm:px-6 lg:px-20 w-full">
+        <div className="mb-4 lg:mb-6 lg:hidden">
+          <h1 className="text-2xl font-bold mb-1">{oneMovie?.title}</h1>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600 flex gap-1">
+              <span>{oneMovie?.release_date}</span>
+              <span>·</span>
+              <span>PG</span>
+              <span>·</span>
+              <span>{formatRuntime(oneMovie?.runtime)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <div className="flex items-center">
+                <span className="font-semibold text-base">
+                  {oneMovie?.vote_average.toString().slice(0, 3)}
+                </span>
+                <span className="text-gray-500 text-sm">/10</span>
               </div>
-              <div>
-                <Skeleton className="h-4 w-12 mb-2" />
-                <Skeleton className="h-6 w-24" />
-              </div>
+              <span className="text-xs text-gray-500">
+                {oneMovie?.vote_count}
+              </span>
             </div>
+          </div>
+        </div>
 
-            <div className="h-[428px] mt-6 mb-[34px] flex gap-8">
-              <Skeleton className="w-[290px] h-full rounded-sm" />
-              <Skeleton className="w-[760px] h-full rounded-sm" />
-            </div>
-
-            <div className="flex gap-3 mb-5">
-              <Skeleton className="h-8 w-20 rounded-full" />
-              <Skeleton className="h-8 w-20 rounded-full" />
-            </div>
-
-            <Skeleton className="h-24 w-full mb-5" />
-
-            <div className="space-y-5 mb-10">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-          </>
-        ) : (
-          // Original content
-          <>
-            <div className="flex justify-between">
-              <div>
-                <p className="text-4xl font-bold">{oneMovie?.title}</p>
-                <div className="flex">
-                  <div>2024.11.26</div>·<div>PG</div>·
-                  <div>{formatRuntime(oneMovie?.runtime)}</div>
-                </div>
-              </div>
-
-              <div>
-                <p className="text-xs">Rating</p>
-                <div className="flex items-center gap-1">
-                  <StarIconBig />
-                  <div>
-                    <div className="flex items-center">
-                      <p className="text-[18px] font-semibold">
-                        {oneMovie?.vote_average.toString().slice(0, 3)}
-                      </p>
-                      <p className="text-[#71717A]">/10</p>
-                    </div>
-                    <p className="text-xs text-[#71717A]">
-                      {oneMovie?.vote_count}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="h-[428px] mt-6 mb-[34px] flex gap-8">
-              <img
-                className="w-[290px] h-full rounded-sm"
-                alt=""
-                src={
-                  "https://image.tmdb.org/t/p/original" + oneMovie?.poster_path
-                }
-              />
-              <div className="w-[760px] h-full rounded-sm">
+        <div className="flex flex-col lg:flex-row lg:gap-8">
+          <div className="lg:w-[760px] lg:flex-shrink-0 mb-6 lg:mb-0">
+            <div className="relative rounded-lg lg:rounded-sm overflow-hidden">
+              {trailer[0]?.key ? (
                 <iframe
                   src={`https://www.youtube.com/embed/${trailer[0]?.key}`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  className="object-cover h-full w-full rounded-sm"
+                  className="w-full h-48 lg:h-[428px] rounded-lg lg:rounded-sm"
+                  title="Movie Trailer"
                 ></iframe>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-3">
-                {oneMovie?.genres.map((item, i) => {
-                  return (
-                    <Badge variant="outline" key={i}>
-                      {item.name}
-                    </Badge>
-                  );
-                })}
-              </div>
-              <p>{oneMovie?.overview}</p>
-              <div className="w-full flex gap-[53px] border-b-[1px] border-[#E4E4E7]">
-                <p className="w-16">Director</p>
-                <p>{movieTeam?.crew[0].name}</p>
-              </div>
-              <div className="w-full flex gap-[53px] border-b-[1px] border-[#E4E4E7]">
-                <p className="w-16">Writers</p>
-                <p>{movieTeam?.crew[5].name}</p>
-              </div>
-              <div className="w-full flex gap-[53px] border-b-[1px] border-[#E4E4E7]">
-                <p className="w-16">Stars</p>
-                <p>{movieTeam?.cast[0].name}</p>
-              </div>
-            </div>
-          </>
-        )}
-
-        <div className="mt-9 flex flex-col gap-9 mb-[112px]">
-          <div className="flex items-center justify-between">
-            <p className="text-2xl font-semibold">More like this</p>
-            <Button variant="link">
-              <p>See more</p>
-              <ChevronRight />
-            </Button>
-          </div>
-          <div className="flex gap-8">
-            {!movieSimilar
-              ? // Skeleton for similar movies while loading
-                [1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton
-                    key={i}
-                    className="h-[372px] w-[190px] rounded-lg"
+              ) : oneMovie?.poster_path ? (
+                <>
+                  <img
+                    src={`https://image.tmdb.org/t/p/original${oneMovie.poster_path}`}
+                    alt={oneMovie?.title}
+                    className="w-full h-48 lg:w-full lg:h-[428px] object-cover"
                   />
-                ))
-              : movieSimilar.slice(0, 5).map((similar, i) => {
-                  return (
-                    <div
-                      className="h-[372px] w-[190px] rounded-lg shadow-sm overflow-hidden"
-                      key={i}
-                    >
-                      <img
-                        className="w-full h-[280px] bg-amber-50 rounded-t-lg"
-                        src={`https://image.tmdb.org/t/p/original${similar?.poster_path}`}
-                      ></img>
-                      <div className="w-full flex flex-col gap-2 ml-2 overflow-hidden">
-                        <div className="flex gap-[8px] items-center">
-                          <StarIcon />
-                          <div className="flex">
-                            <p>
-                              {similar?.vote_average.toString().slice(0, 3)}
-                            </p>
-                            <p className="text-[#71717A]">/10</p>
-                          </div>
-                        </div>
-                        <p className="text-[18px] tracking-tight">
-                          {similar?.title}
-                        </p>
-                      </div>
+                  <div className="lg:hidden absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                    <div className="flex items-center gap-2 bg-black bg-opacity-50 px-3 py-2 rounded-full text-white">
+                      <PlayIcon />
+                      <span className="text-sm">Play trailer</span>
+                      <span className="text-sm">2:35</span>
                     </div>
-                  );
-                })}
+                  </div>
+                </>
+              ) : (
+                <div className="w-full h-48 sm:h-60 md:h-72 lg:h-[428px] bg-gray-200 rounded-lg lg:rounded-sm flex items-center justify-center">
+                  <p className="text-gray-500">No media available</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="lg:flex-1">
+            <div className="hidden lg:block mb-6">
+              <h1 className="text-4xl font-bold mb-2">{oneMovie?.title}</h1>
+              <div className="flex items-center justify-between">
+                <div className="text-base text-gray-600 flex gap-1">
+                  <span>{oneMovie?.release_date}</span>
+                  <span>·</span>
+                  <span>PG</span>
+                  <span>·</span>
+                  <span>{formatRuntime(oneMovie?.runtime)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StarIconBig />
+                  <div className="flex items-center">
+                    <span className="font-semibold text-lg">
+                      {oneMovie?.vote_average.toString().slice(0, 3)}
+                    </span>
+                    <span className="text-gray-500 text-base">/10</span>
+                  </div>
+                  <span className="text-xs text-[#71717A]">
+                    {oneMovie?.vote_count}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {oneMovie?.genres?.map((genre, i) => (
+                  <Badge
+                    key={i}
+                    variant="outline"
+                    className="text-xs sm:text-sm lg:px-3 lg:py-1 lg:bg-gray-100 lg:text-gray-700 lg:rounded-full lg:border-none"
+                  >
+                    {genre.name}
+                  </Badge>
+                ))}
+              </div>
+
+              <div className="flex gap-4 mb-4">
+                {oneMovie?.poster_path && (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${oneMovie.poster_path}`}
+                    alt={oneMovie?.title}
+                    className="lg:hidden w-16 h-24 object-cover rounded flex-shrink-0"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="text-sm lg:text-base text-gray-700 lg:text-black leading-relaxed">
+                    {oneMovie?.overview}
+                  </p>
+                </div>
+              </div>
+
+              <Credits movieTeam={movieTeam} />
+            </div>
           </div>
         </div>
+
+        <MoreLikeThis movieSimilar={movieSimilar as MovieSimilar[]} />
       </div>
 
       <Footer />

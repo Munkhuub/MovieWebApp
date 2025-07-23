@@ -48,11 +48,8 @@ export const TopRated = () => {
       <div className="w-full grid grid-cols-2 lg:grid-cols-5 gap-5 lg:gap-8">
         {movies.slice(0, 10).map((item, index) => {
           return (
-            <Link href={`/movie/${item.id}`} key={index}>
-              <div
-                className="h-[309px] lg:h-110 w-[158px]lg:w-[230px] bg-[#F4F4F5] rounded-lg"
-                key={index}
-              >
+            <Link href={`/movie/${item.id}`} key={index} className="group">
+              <div className="h-full w-full rounded-lg shadow-sm overflow-hidden transition-transform duration-300 group-hover:scale-[1.03] bg-white dark:bg-gray-800">
                 <img
                   className="w-full h-[233px] lg:h-[340px] rounded-lg"
                   src={`https://image.tmdb.org/t/p/original${item.poster_path}`}

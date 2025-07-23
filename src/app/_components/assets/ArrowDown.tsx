@@ -1,4 +1,4 @@
-export const ArrowDown = () => {
+export const ArrowDown = ({ className }: { className?: string }) => {
   return (
     <svg
       width="16"

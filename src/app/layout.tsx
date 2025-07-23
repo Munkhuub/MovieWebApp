@@ -26,7 +26,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
       >
         <Suspense>
           <GenreProvider>
-            <div className="lg:w-[1440px] m-auto">{children} </div>
+            <div className="w-full lg:max-w-[1440px] lg:mx-auto">
+              {children}
+            </div>
           </GenreProvider>
         </Suspense>
       </body>

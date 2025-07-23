@@ -11,8 +11,6 @@ import { ACCESS_TOKEN, Movie } from "../_components/UpComing";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Navbar } from "../_components/Navbar";
 import { StarIcon } from "../_components/assets/StarIcon";
-import { input } from "framer-motion/client";
-import { title } from "process";
 import { PaginationComponent } from "../_components/Pagination";
 
 const SearchPage = () => {
@@ -28,6 +26,7 @@ const SearchPage = () => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const [selectGenreId, setSelectGenreId] = useState(0);
+  const [isDark, setIsDark] = useState(false);
 
   const handlePage = (page: number) => {
     setPage(page);
@@ -36,27 +35,27 @@ const SearchPage = () => {
   useEffect(() => {
     const getMovies = async () => {
       setLoading(true);
-
-      const { data } = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=en-US&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
-          },
-        }
-      );
-
-      setSearchResults(data.results);
-      setTotal(data.total_results);
-      setTitle(data.title);
-      setLoading(false);
-      setLastPage(data.total_pages);
-      console.log(data);
+      try {
+        const { data } = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=en-US&page=${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_TOKEN}`,
+            },
+          }
+        );
+        setSearchResults(data.results);
+        setTotal(data.total_results);
+        setTitle(data.title);
+        setLastPage(data.total_pages);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     getMovies();
   }, [page, searchValue]);
-
-  console.log();
 
   const handleNext = () => {
     setPage((prev) => prev + 1);
@@ -68,72 +67,96 @@ const SearchPage = () => {
     (p) => p > 1 && p < lastPage
   );
 
-  const filteredSearchResults = searchResults.filter((item, index) => {
-    if (item.genre_ids.includes(selectGenreId)) return true;
+  const filteredSearchResults = searchResults.filter((item) => {
+    if (selectGenreId === 0) return true;
+    return item.genre_ids.includes(selectGenreId);
   });
+
+  const handleToggleDark = () => setIsDark(!isDark);
+
   return (
-    <div>
-      <Navbar />
-      <div className="px-20 py-12 flex flex-col gap-8">
-        <h1 className="text-3xl font-semibold">Search results</h1>
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-8">
-            <div className="text-xl font-semibold ">
+    <div className={isDark ? "dark" : ""}>
+      <Navbar isDark={isDark} onToggleDark={handleToggleDark} />
+      <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-6 md:py-8 lg:py-12 flex flex-col gap-6 md:gap-8 bg-white dark:bg-gray-900">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold dark:text-white">
+          Search results
+        </h1>
+
+        <div className="flex flex-col gap-6 md:gap-8">
+          <div className="w-full lg:w-[360px] lg:pl-6 lg:border-l lg:border-slate-300 dark:lg:border-gray-700 lg:order-2">
+            <div className="flex flex-col gap-4">
+              <div>
+                <h1 className="text-xl md:text-2xl font-semibold dark:text-white">
+                  Genres
+                </h1>
+                <p className="text-sm md:text-base dark:text-gray-400">
+                  See lists of movies by genre
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {genres.map(({ id, name }) => (
+                  <Badge
+                    variant={selectGenreId === id ? "default" : "outline"}
+                    className="cursor-pointer transition-all hover:scale-105 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"
+                    key={id}
+                    onClick={() =>
+                      setSelectGenreId(selectGenreId === id ? 0 : id)
+                    }
+                  >
+                    {name}
+                    <ChevronRight className="ml-1 h-3 w-3 md:h-4 md:w-4" />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6 md:gap-8 w-full lg:order-1">
+            <div className="text-lg md:text-xl font-semibold dark:text-gray-300">
               {total} results for {title}
             </div>
-            <div className="grid grid-cols-4 gap-12">
+
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {loading
-                ? new Array(20).fill(0).map((_, index) => (
-                    <div key={index}>
-                      <Skeleton className="w-[165px] h-[330px]" />
-                      <Skeleton className="mt-2" />
+                ? Array.from({ length: 8 }).map((_, index) => (
+                    <div key={index} className="h-full w-full">
+                      <Skeleton className="w-full aspect-[2/3] rounded-lg dark:bg-gray-800" />
+                      <Skeleton className="mt-3 h-5 w-full dark:bg-gray-800" />
+                      <Skeleton className="mt-2 h-4 w-3/4 dark:bg-gray-800" />
                     </div>
                   ))
-                : selectGenreId === 0
-                ? searchResults.map((movie) => (
-                    <Link href={`/movie/${movie.id}`} key={movie.id}>
-                      <div className="h-[330px] w-[165px] rounded-lg shadow-sm overflow-hidden">
-                        <img
-                          className="w-full h-[244px] bg-amber-50 rounded-t-lg"
-                          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                          alt={movie.title}
-                        />
-                        <div className="w-full flex flex-col gap-2 ml-2 overflow-hidden">
-                          <div className="flex gap-[8px] items-center">
-                            <StarIcon />
-                            <div className="flex">
-                              <p>
-                                {movie?.vote_average.toString().slice(0, 3)}
-                              </p>
-                              <p className="text-[#71717A]">/10</p>
-                            </div>
-                          </div>
-                          <p className="text-[18px] tracking-tight">
-                            {movie?.title}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
                 : filteredSearchResults.map((movie) => (
-                    <Link href={`/movie/${movie.id}`} key={movie.id}>
-                      <div className="h-[330px] w-[165px] rounded-lg shadow-sm overflow-hidden">
-                        <img
-                          className="w-full h-[244px] bg-amber-50 rounded-t-lg"
-                          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                          alt={movie.title}
-                        />
-                        <div className="w-full flex flex-col gap-2 ml-2 overflow-hidden">
-                          <div className="flex gap-[8px] items-center">
-                            <StarIcon />
-                            <div className="flex">
-                              <p>
-                                {movie?.vote_average.toString().slice(0, 3)}
-                              </p>
-                              <p className="text-[#71717A]">/10</p>
+                    <Link
+                      href={`/movie/${movie.id}`}
+                      key={movie.id}
+                      className="group"
+                    >
+                      <div className="h-full w-full rounded-lg shadow-sm overflow-hidden transition-transform duration-300 group-hover:scale-[1.03] bg-white dark:bg-gray-800">
+                        <div className="relative">
+                          <img
+                            className="w-full aspect-[2/3] object-cover rounded-t-lg"
+                            src={
+                              movie.poster_path
+                                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                                : "/placeholder-poster.jpg"
+                            }
+                            alt={movie.title}
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                            <div className="flex gap-1 items-center">
+                              <StarIcon className="w-4 h-4 md:w-5 md:h-5" />
+                              <div className="flex text-white text-sm md:text-base">
+                                <span>
+                                  {movie?.vote_average?.toFixed(1) || "N/A"}
+                                </span>
+                                <span className="text-gray-300">/10</span>
+                              </div>
                             </div>
                           </div>
-                          <p className="text-[18px] tracking-tight">
+                        </div>
+                        <div className="p-3">
+                          <p className="text-base md:text-lg font-medium line-clamp-2 dark:text-white">
                             {movie?.title}
                           </p>
                         </div>
@@ -141,37 +164,17 @@ const SearchPage = () => {
                     </Link>
                   ))}
             </div>
-          </div>
-          <div className="w-[1px] bg-slate-300" />
-          <div className="w-[360px] flex flex-col gap-5">
-            <div>
-              <h1 className="text-2xl font-semibold">Genres</h1>
-              <p>See lists of movies by genre</p>
-            </div>
 
-            <div className="flex flex-wrap gap-4">
-              {genres.map(({ id, name }) => (
-                <Badge
-                  // variant={genre === id.toString() ? "default" : "outline"}
-                  className="flex items-center gap-2"
-                  key={id}
-                  onClick={() => setSelectGenreId(id)}
-                >
-                  {name}
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Badge>
-              ))}
-            </div>
+            <PaginationComponent
+              handlePrev={handlePrev}
+              handleNext={handleNext}
+              currentPage={currentPage}
+              lastPage={lastPage}
+              handlePage={handlePage}
+              page={page}
+            />
           </div>
         </div>
-        <PaginationComponent
-          handlePrev={handlePrev}
-          handleNext={handleNext}
-          currentPage={currentPage}
-          lastPage={lastPage}
-          handlePage={handlePage}
-          page={page}
-        />
       </div>
     </div>
   );
