@@ -36,6 +36,7 @@ const SearchPage = () => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
+  const [isDark, setIsDark] = useState(false);
 
   const handlePage = (page: number) => {
     setPage(page);
@@ -72,10 +73,10 @@ const SearchPage = () => {
   const currentPage = [page - 1, page, page + 1].filter(
     (p) => p > 1 && p < lastPage
   );
-
+  const handleToggleDark = () => setIsDark(!isDark);
   return (
-    <div>
-      <Navbar />
+    <div className={isDark ? "dark" : ""}>
+      <Navbar isDark={isDark} onToggleDark={handleToggleDark} />
       <div className="px-20 py-12 flex flex-col gap-8">
         <h1 className="text-3xl font-semibold">Search filter</h1>
         <div className="flex gap-4">
